@@ -1,0 +1,77 @@
+﻿@model KTPMUD.Models.LichHen
+
+@{
+    ViewData["Title"] = "Chi tiết Lịch hẹn";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Thông tin chung</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Thời gian</dt>
+            <dd class="col-sm-9">@Model.ThoiGian.ToString("HH:mm, dddd, dd MMMM yyyy", new System.Globalization.CultureInfo("vi-VN"))</dd>
+
+            <dt class="col-sm-3">Trạng thái</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.TrangThai == "Đã hủy" ? "bg-danger" : "bg-success")">
+                    @Model.TrangThai
+                </span>
+            </dd>
+
+            <dt class="col-sm-3">Ghi chú của Bệnh nhân</dt>
+            <dd class="col-sm-9">
+                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">@(string.IsNullOrEmpty(Model.GhiChu) ? "Không có" : Model.GhiChu)</pre>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Thông tin Bệnh nhân</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Họ tên</dt>
+                    <dd class="col-sm-8">@Model.User.FullName</dd>
+
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">@Model.User.Email</dd>
+
+                    <dt class="col-sm-4">Số điện thoại</dt>
+                    <dd class="col-sm-8">@Model.User.PhoneNumber</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Thông tin Bác sĩ</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Họ tên</dt>
+                    <dd class="col-sm-8">BS. @Model.BacSi.HoTen</dd>
+
+                    <dt class="col-sm-4">Chuyên khoa</dt>
+                    <dd class="col-sm-8">@Model.BacSi.ChuyenKhoa</dd>
+
+                    <dt class="col-sm-4">Số điện thoại</dt>
+                    <dd class="col-sm-8">@Model.BacSi.SoDienThoai</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-secondary">Quay lại Danh sách</a>
+</div>

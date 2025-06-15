@@ -1,0 +1,109 @@
+﻿@model KTPMUD.Models.LichHenViewModel
+
+@{
+    ViewData["Title"] = "Đặt Lịch Hẹn";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="mb-0">Đặt Lịch Hẹn</h3>
+                <p class="text-muted">Chọn chuyên khoa để xem danh sách bác sĩ.</p>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="ChuyenKhoa" class="form-label"></label>
+                        <select asp-for="ChuyenKhoa" asp-items="ViewBag.ChuyenKhoaList" class="form-select" id="chuyenKhoaSelect">
+                            <option value="">-- Trước tiên, hãy chọn chuyên Khoa --</option>
+                        </select>
+                        <span asp-validation-for="ChuyenKhoa" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IdBacSi" class="form-label"></label>
+                        <select asp-for="IdBacSi" class="form-select" id="bacSiSelect" disabled>
+                            <option value="">-- Không bắt buộc, có thể để trống --</option>
+                        </select>
+                        <span asp-validation-for="IdBacSi" class="text-danger"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                             <label asp-for="NgayHen" class="form-label"></label>
+                             <input asp-for="NgayHen" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                             <span asp-validation-for="NgayHen" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="KhungGio" class="form-label"></label>
+                            <select asp-for="KhungGio" class="form-select">
+                                <option value="">-- Chọn Khung Giờ --</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="11:30">11:30</option>
+                                <option value="14:00">14:00</option>
+                                <option value="14:30">14:30</option>
+                                <option value="15:00">15:00</option>
+                                <option value="15:30">15:30</option>
+                                <option value="16:00">16:00</option>
+                                <option value="16:30">16:30</option>
+                            </select>
+                            <span asp-validation-for="KhungGio" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GhiChu" class="form-label"></label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Ghi chú hoặc triệu chứng bổ sung..."></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-md-2">Quay Lại</a>
+                        <button type="submit" class="btn btn-primary">Đặt Lịch Hẹn</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script>
+            $(document).ready(function () {
+                $('#chuyenKhoaSelect').on('change', function () {
+                    var selectedChuyenKhoa = $(this).val();
+                    var bacSiSelect = $('#bacSiSelect');
+
+                    bacSiSelect.prop('disabled', true);
+                    bacSiSelect.html('<option value="">-- Đang tải bác sĩ... --</option>');
+
+                    if (selectedChuyenKhoa) {
+                        $.ajax({
+                            url: '@Url.Action("GetDoctorsBySpecialty", "LichHen")',
+                            type: 'GET',
+                            data: { chuyenKhoa: selectedChuyenKhoa },
+                            success: function (doctors) {
+                                bacSiSelect.prop('disabled', false);
+                                bacSiSelect.html('<option value="">-- Không bắt buộc, có thể để trống --</option>');
+                                $.each(doctors, function (i, doctor) {
+                                    bacSiSelect.append($('<option></option>').val(doctor.id).html('BS. ' + doctor.hoTen));
+                                });
+                            },
+                            error: function () {
+                                 bacSiSelect.html('<option value="">-- Lỗi khi tải bác sĩ --</option>');
+                            }
+                        });
+                    } else {
+                         bacSiSelect.html('<option value="">-- Không bắt buộc, có thể để trống --</option>');
+                    }
+                });
+            });
+        </script>
+}

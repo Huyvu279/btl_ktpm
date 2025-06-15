@@ -1,0 +1,36 @@
+﻿@model KTPMUD.Models.LichHen
+
+@{
+    ViewData["Title"] = "Hủy Lịch Hẹn";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Xác nhận Hủy Lịch Hẹn</h4>
+            </div>
+            <div class="card-body">
+                <p>Bạn có chắc chắn muốn hủy lịch hẹn này?</p>
+                <div>
+                    <dl class="row">
+                        <dt class="col-sm-4">Bệnh Nhân:</dt>
+                        @* SỬA LỖI QUAN TRỌNG: Dùng BenhNhanUser.FullName *@
+                        <dd class="col-sm-8">@Model.User.FullName</dd>
+
+                        <dt class="col-sm-4">Bác Sĩ:</dt>
+                        <dd class="col-sm-8">BS. @Model.BacSi.HoTen</dd>
+
+                        <dt class="col-sm-4">Thời Gian:</dt>
+                        <dd class="col-sm-8">@Model.ThoiGian.ToString("HH:mm, dd/MM/yyyy")</dd>
+                    </dl>
+                </div>
+                <form asp-action="Cancel">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">Vâng, Hủy Lịch</button>
+                    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

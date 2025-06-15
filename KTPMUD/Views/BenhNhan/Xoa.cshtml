@@ -1,0 +1,48 @@
+﻿@model KTPMUD.Models.BenhNhan
+
+@{
+    ViewData["Title"] = "Xác nhận Xóa";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Bạn có chắc chắn muốn xóa hồ sơ bệnh án này không?</h3>
+<div>
+    <h4>Thông tin Bệnh nhân</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.HoTen)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.HoTen)
+        </dd>
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.NgaySinh)
+        </dt>
+        <dd class = "col-sm-9">
+            @* SỬA LỖI Ở ĐÂY: Hiển thị trực tiếp, không cần kiểm tra HasValue *@
+            @Model.NgaySinh.ToString("dd/MM/yyyy")
+        </dd>
+
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.GioiTinh)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.GioiTinh)
+        </dd>
+
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.SoDienThoai)
+        </dt>
+        <dd class = "col-sm-9">
+            @Html.DisplayFor(model => model.SoDienThoai)
+        </dd>
+    </dl>
+
+    <form asp-action="Xoa">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Xóa Thực Sự" class="btn btn-danger" /> |
+        <a asp-action="DanhSach" class="btn btn-secondary">Quay lại Danh sách</a>
+    </form>
+</div>

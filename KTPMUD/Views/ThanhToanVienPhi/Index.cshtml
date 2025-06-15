@@ -1,0 +1,80 @@
+﻿@model IEnumerable<KTPMUD.Models.ThanhToanVienPhi>
+
+@{
+    ViewData["Title"] = "Quản lý Viện phí";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+}
+
+@* THÊM PHẦN HIỂN THỊ THÔNG BÁO LỖI *@
+@if (TempData["ErrorMessage"] != null)
+{
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+}
+
+@if (User.IsInRole("BacSi"))
+{
+        <p>
+            <a asp-action="TaoHoaDon" class="btn btn-primary">Tạo Hóa đơn mới</a>
+        </p>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Ngày tạo</th>
+                    @if (User.IsInRole("BacSi"))
+                    {
+                            <th>Bệnh nhân</th>
+                    }
+                    <th>Số tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                        <tr>
+                            <td>@item.NgayThanhToan.ToString("dd/MM/yyyy")</td>
+                        @if (User.IsInRole("BacSi"))
+                        {
+                                    <td>@item.User.FullName</td>
+                        }
+                            <td>@item.SoTien.ToString("N0") VNĐ</td>
+                            <td>
+                                <span class="badge @(item.TrangThai == "Đã thanh toán" ? "bg-success" : "bg-warning text-dark")">
+                                @item.TrangThai
+                                </span>
+                            </td>
+                            <td>
+                            @if (User.IsInRole("BenhNhan"))
+                            {
+                                        <a asp-action="ChiTiet" asp-route-id="@item.Id" class="btn btn-info btn-sm">Xem chi tiết</a>
+                            }
+                            @if (User.IsInRole("BacSi") && item.TrangThai != "Đã thanh toán")
+                            {
+                                        <form asp-action="XacNhanThanhToan" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-success btn-sm">Xác nhận đã thanh toán</button>
+                                        </form>
+                            }
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,119 @@
+﻿@model KTPMUD.ViewModels.BenhNhanNhapVaXemViewModel
+
+@{
+    ViewData["Title"] = "Quản lý Hồ sơ Bệnh án";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <h4>Nhập hồ sơ mới</h4>
+        <hr />
+        <form asp-action="NhapThongTin" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.HoTen" class="form-label"></label>
+                <input asp-for="BenhNhanMoi.HoTen" class="form-control" />
+                <span asp-validation-for="BenhNhanMoi.HoTen" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.NgaySinh" class="form-label"></label>
+                <input asp-for="BenhNhanMoi.NgaySinh" class="form-control" type="date"/>
+                <span asp-validation-for="BenhNhanMoi.NgaySinh" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.GioiTinh" class="form-label"></label>
+                <select asp-for="BenhNhanMoi.GioiTinh" class="form-select">
+                    <option value="">-- Chọn giới tính --</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
+                <span asp-validation-for="BenhNhanMoi.GioiTinh" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.DiaChi" class="form-label"></label>
+                <input asp-for="BenhNhanMoi.DiaChi" class="form-control" />
+                <span asp-validation-for="BenhNhanMoi.DiaChi" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.SoDienThoai" class="form-label"></label>
+                <input asp-for="BenhNhanMoi.SoDienThoai" class="form-control" />
+                <span asp-validation-for="BenhNhanMoi.SoDienThoai" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.Email" class="form-label"></label>
+                <input asp-for="BenhNhanMoi.Email" class="form-control" />
+                <span asp-validation-for="BenhNhanMoi.Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.TienSuBenhAn" class="form-label"></label>
+                <textarea asp-for="BenhNhanMoi.TienSuBenhAn" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BenhNhanMoi.GhiChu" class="form-label"></label>
+                <textarea asp-for="BenhNhanMoi.GhiChu" class="form-control" rows="2"></textarea>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Thêm Bệnh nhân" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-7">
+        <h4>Danh sách hiện có</h4>
+        <hr />
+        @if (Model.DanhSachDaNhap != null && Model.DanhSachDaNhap.Any())
+        {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Họ Tên</th>
+                            <th>Ngày Sinh</th>
+                            <th>Giới Tính</th>
+                            <th>Số Điện Thoại</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.DanhSachDaNhap)
+                    {
+                            <tr>
+                                <td>@item.HoTen</td>
+                                <td>
+                                @* SỬA LỖI Ở ĐÂY: Vì NgaySinh là DateTime không phải DateTime?, 
+                               chúng ta không cần kiểm tra .HasValue và .Value *@
+                                @item.NgaySinh.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>@item.GioiTinh</td>
+                                <td>@item.SoDienThoai</td>
+                                <td>
+                                    <a asp-action="ChiTiet" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                                </td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+        }
+        else
+        {
+                <p>Chưa có bệnh nhân nào được nhập.</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
